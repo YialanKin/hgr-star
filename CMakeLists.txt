@@ -58,26 +58,24 @@ target_include_directories(HGRSTAR PRIVATE
 # -----------------------------
 # 编译器优化和警告设置
 # -----------------------------
-if(MSVC)
-    # MSVC 优化
-    target_compile_options(HGRSTAR PRIVATE
-        /O2                    # 全优化
-        /Ob2 /Oi /Ot /Oy /GL   # 高级优化
-    )
-    target_link_options(HGRSTAR PRIVATE /LTCG)  # 链接时代码生成
+# The following code block is suggested to be used on Windows.
+# According to https://github.com/pytorch/pytorch/issues/25457,
+# the DLLs need to be copied to avoid memory errors.
+if (MSVC)
+    file(GLOB TORCH_DLLS "${TORCH_INSTALL_PREFIX}/lib/*.dll")
+    add_custom_command(TARGET HGRSTAR
+                       POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                       ${TORCH_DLLS}
+                       $<TARGET_FILE_DIR:HGRSTAR>)
+    # 编译优化
+    target_compile_options(HGRSTAR PRIVATE /O2)
+    target_compile_options(HGRSTAR PRIVATE /Ob2 /Oi /Ot /Oy /GL)
+    target_link_options(HGRSTAR PRIVATE /LTCG)
+    # 禁用警告
+    message(STATUS "Adding MSVC compile options: /w44503 /wd4267 /wd4819")
+    target_compile_options(HGRSTAR PRIVATE /w44503)
+    target_compile_options(HGRSTAR PRIVATE /wd4267)
+    target_compile_options(HGRSTAR PRIVATE /wd4819)
 
-    # 禁用特定警告
-    target_compile_options(HGRSTAR PRIVATE
-        $<$<COMPILE_LANGUAGE:CXX>:/wd4267>
-        $<$<COMPILE_LANGUAGE:CXX>:/wd4819>
-    )
-else()
-    # GCC/Clang 优化
-    target_compile_options(HGRSTAR PRIVATE
-        -O3 -march=native -DNDEBUG
-    )
-    target_compile_options(HGRSTAR PRIVATE
-        -Wall -Wextra -Wpedantic
-        # 可选：-Werror
-    )
-endif()
+endif (MSVC)
