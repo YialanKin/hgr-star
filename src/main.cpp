@@ -5,6 +5,7 @@
 #include "StarNet2503132330TVA.hpp"
 #include "StarNet2503141330TVA.hpp"
 #include "StarNet2510152000TVA.hpp"
+#include "StarNet2510161140TVA.hpp"
 
 int main(int argc, char* argv[]) {
     // 检查命令行参数的数量
@@ -149,6 +150,30 @@ int main(int argc, char* argv[]) {
 
     if (model == "StarNet2510152000A") {
         StarNet2510152000TVABuilder builder;
+        builder.setCUDA(js["cuda"].get<bool>())
+            .setEpochs(js["epochs"].get<int>())
+            .setWarmup(js["warmup"].get<int>())
+            .setBatchSize(js["batchSize"].get<int>())
+            .setLearningRate(js["learningRate"].get<double>())
+            .setBeta1(js["beta1"].get<double>())
+            .setBeta2(js["beta2"].get<double>())
+            .setWeightDecay(js["weightDecay"].get<double>())
+            .setRootOrig(js["rootOrig"].get<std::string>())
+            .setRootEnve(js["rootEnve"].get<std::string>())
+            .setRootMUAPP2P(js["rootMUAPP2P"].get<std::string>())
+            .setRootComm(js["rootComm"].get<std::string>())
+            .setSavePath(js["savePath"].get<std::string>())
+            .setCombination(js["combination"].get<int>());
+        builder.config.model_config.setEmbed(js["embed"].get<int>())
+            .setDepths(js["depths"].get<std::vector<int>>());
+        for (int fold = 1; fold <= 5; ++fold) {
+            builder.setValFold(fold).build();
+        }
+        return 0;
+    }
+
+    if (model == "StarNet2510161140A") {
+        StarNet2510161140TVABuilder builder;
         builder.setCUDA(js["cuda"].get<bool>())
             .setEpochs(js["epochs"].get<int>())
             .setWarmup(js["warmup"].get<int>())
