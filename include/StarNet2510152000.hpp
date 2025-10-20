@@ -3,7 +3,8 @@
 
 class StarNet2510152000Options {
 private:
-    int in_channels = 512;
+    int in_channels = 64;
+    int compressed_channels = 32;
     int embed = 32;
     int conv_ks = 3;
     int conv_stride = 2;
@@ -41,6 +42,7 @@ public:
 
     int Depth(int stage);
     StarNet2510152000Options& setInChannels(int value);
+    StarNet2510152000Options& setCompressedChannels(int value);
     StarNet2510152000Options& setEmbed(int value);
     StarNet2510152000Options& setConvKs(int value);
     StarNet2510152000Options& setConvStride(int value);

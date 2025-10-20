@@ -165,7 +165,9 @@ int main(int argc, char* argv[]) {
             .setSavePath(js["savePath"].get<std::string>())
             .setCombination(js["combination"].get<int>());
         builder.config.model_config.setEmbed(js["embed"].get<int>())
-            .setDepths(js["depths"].get<std::vector<int>>());
+            .setDepths(js["depths"].get<std::vector<int>>())
+            .setInChannels(js["inChannels"].get<int>())
+            .setCompressedChannels(js["compressedChannels"].get<int>());
         for (int fold = 1; fold <= 5; ++fold) {
             builder.setValFold(fold).build();
         }

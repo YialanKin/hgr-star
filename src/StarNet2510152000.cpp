@@ -65,7 +65,7 @@ torch::Tensor StarNet2510152000Impl::forward(torch::Tensor x) {
     int f = x.size(1);
     int t = x.size(2);
     x = x.reshape({b * c, h * w, f, t});    // [b * c * h * w, 32, 24] -> [b * c, h * w, 32, 24]
-    x = pre_conv->forward(x);               // [b * c, h * w = 64, 32, 24] -> [b * c, h * w = 32, 32, 24]
+    x = pre_conv->forward(x);               // e.g. [b * c, h * w = 64, 32, 24] -> [b * c, h * w = 32, 32, 24]
     x = x.permute({0, 3, 2, 1});
     x = pre_bn->forward(x);
     x = pre_act->forward(x);
@@ -89,7 +89,7 @@ torch::Tensor StarNet2510152000Impl::forward(torch::Tensor x) {
 
 
 void StarNet2510152000Options::update(void) {
-    // pre_conv_config = torch::nn::ConvTranspose2dOptions(in_channels, embed, 4).stride(4).padding(0);
+    pre_conv_config = torch::nn::Conv2dOptions(in_channels, compressed_channels, 1).stride(1);
     pre_bn_config = torch::nn::BatchNorm2dOptions(embed);
 
     int depths_sum = 0;
@@ -142,6 +142,12 @@ int StarNet2510152000Options::Depth(int stage) {
 
 StarNet2510152000Options& StarNet2510152000Options::setInChannels(int value) {
     in_channels = value;
+    update();
+    return *this;
+}
+
+StarNet2510152000Options& StarNet2510152000Options::setCompressedChannels(int value) {
+    compressed_channels = value;
     update();
     return *this;
 }
