@@ -41,8 +41,9 @@ The project leverages [LibTorch](https://pytorch.org/), the C++ API of PyTorch, 
 - `StarNet2503132330TVA` — Corresponding training and validation class, also trained with label smoothing.
 - `StarNet2503141330` — A StarNet variant using Module 2 as input embedding, used as another ablation study target.
 - `StarNet2503141330TVA` — Corresponding training and validation class, also trained with label smoothing.
-- `StarNet25101520000` — StarNet with a STFT-based embedding module as input embedding.
-- `StarNet25101520000TVA` — The corresponding training and validation class for the former, trained with the aid of label smoothing technique.
+- `StarNet2510152000` — StarNet with a STFT-based embedding module as input embedding.
+- `StarNet2510152000TV` — Training and validation wrapper for the above model. T denotes Training, V denotes Validation.
+- `StarNet2510152000TVA` — The corresponding training and validation class for the former, trained with the aid of label smoothing technique.
 - `StarNet2510161140`：A fine-tuned version of the previous model, namely StarNet with a STFT-based embedding module as input embedding, in which the Conv2d layer has been removed to evaluate its impact.
 - `StarNet2510161140TVA`：The corresponding training and validation class for the above model, trained with label smoothing.
 - `SummarizeResult` — A utility class for summarizing and organizing experimental results.
