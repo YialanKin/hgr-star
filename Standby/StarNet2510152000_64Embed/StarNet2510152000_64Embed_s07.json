@@ -1,0 +1,21 @@
+{
+    "model": "StarNet2510152000",
+    "cuda": true,
+    "epochs": 20,
+    "warmup": 2,
+    "batchSize": 32,
+    "learningRate": 0.001,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "weightDecay": 0.001,
+    "rootOrig": "D:\\cxx workshop\\HDsEMG Pattern Recognition\\dataset\\features\\orig\\s7",
+    "rootEnve": "",
+    "rootMUAPP2P": "",
+    "rootComm": "",
+    "savePath": "D:\\cxx workshop\\HDsEMG Pattern Recognition\\model\\StarNet2510152000_64Embed\\s7",
+    "combination": 3,
+    "embed": 24,
+    "depths": [1, 2, 2, 1],
+    "inChannels": 64,
+    "compressedChannels": 64
+}
