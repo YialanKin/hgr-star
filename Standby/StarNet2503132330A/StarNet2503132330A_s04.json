@@ -15,8 +15,9 @@
     "savePath": "D:\\cxx workshop\\HDsEMG Pattern Recognition\\model\\StarNet2503132330A\\s4",
     "combination": 3,
     "inChannels": 512,
-    "upsampleSize": 32,
-    "dechannels": 24,
+    "upsampleSize": 224,
+    "dechannels": 3,
     "embed": 24,
+    "downsampleRatio": 7,
     "depths": [1, 2, 2, 1]
 }
