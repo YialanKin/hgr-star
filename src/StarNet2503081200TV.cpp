@@ -36,7 +36,9 @@ StarNet2503081200TV::StarNet2503081200TV(const StarNet2503081200TVConfig& config
 
     // 初始化模型
     torch::autograd::GradMode::set_enabled(true);
-    model = std::make_shared<StarNet2503081200Impl>(config.model_config);
+    std::shared_ptr<StarNet2503081200Impl> model_ptr = std::make_shared<StarNet2503081200Impl>(config.model_config);
+    logger->log("Total number of model parameters: " + std::to_string(Utils::countParameters(model_ptr)));
+    model = model_ptr;
     model->to(config.device);
     logger->log("Successfully create model: ");
     for (const auto& named_module : model->named_modules()) {

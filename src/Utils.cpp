@@ -83,9 +83,9 @@ void Utils::summarize(std::string res_save, std::string sum_save) {
     return;
 }
 
-int64_t Utils::countParameters(const torch::nn::Module& model) {
+int64_t Utils::countParameters(const std::shared_ptr<torch::nn::Module> model) {
     int64_t totoalParameters = 0;
-    for (const auto& param : model.parameters()) {
+    for (const auto& param : model->parameters()) {
         totoalParameters += param.numel();
     }
     return totoalParameters;

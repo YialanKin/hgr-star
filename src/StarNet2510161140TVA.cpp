@@ -36,7 +36,9 @@ StarNet2510161140TVA::StarNet2510161140TVA(const StarNet2510161140TVAConfig& con
 
     // 初始化模型
     torch::autograd::GradMode::set_enabled(true);
-    model = std::make_shared<StarNet2510161140Impl>(config.model_config);
+    std::shared_ptr<StarNet2510161140Impl> model_ptr = std::make_shared<StarNet2510161140Impl>(config.model_config);
+    logger->log("Total number of model parameters: " + std::to_string(Utils::countParameters(model_ptr)));
+    model = model_ptr;
     model->to(config.device);
     logger->log("Successfully create model: ");
     for (const auto& named_module : model->named_modules()) {

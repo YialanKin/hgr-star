@@ -16,5 +16,5 @@ public:
     /// @brief 计算模型总参数量
     /// @param model 模型
     /// @return 参数量
-    static int64_t countParameters(const torch::nn::Module& model);
+    static int64_t countParameters(const std::shared_ptr<torch::nn::Module> model);
 };

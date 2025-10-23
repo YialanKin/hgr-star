@@ -2,6 +2,7 @@
 #include "StarNet2510152000.hpp"
 #include "MultiFeatureDataset.hpp"
 #include "Logger.hpp"
+#include "Utils.hpp"
 
 #define OEM 1
 #define OEC 2
