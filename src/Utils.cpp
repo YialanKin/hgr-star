@@ -1,13 +1,6 @@
-/**
- * @file SummarizeResult.cpp
- * @brief 包含 SummarizeResult 类的实现。
- * @author Rat Kin
- * @date 2025-01-03
- */
+#include "Utils.hpp"
 
-#include "SummarizeResult.hpp"
-
-void SummarizeResult::summarize(std::string res_save, std::string sum_save) {
+void Utils::summarize(std::string res_save, std::string sum_save) {
     std::vector<std::vector<double>> BestRes(21, std::vector<double>(6, 0.0));
     std::vector<std::vector<double>> LastRes(21, std::vector<double>(6, 0.0));
     for (int s = 1; s <= 20; ++s) {
@@ -88,4 +81,12 @@ void SummarizeResult::summarize(std::string res_save, std::string sum_save) {
     }
     outfile.close();
     return;
+}
+
+int64_t Utils::countParameters(const torch::nn::Module& model) {
+    int64_t totoalParameters = 0;
+    for (const auto& param : model.parameters()) {
+        totoalParameters += param.numel();
+    }
+    return totoalParameters;
 }

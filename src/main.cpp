@@ -1,5 +1,5 @@
 #include <nlohmann/json.hpp>
-#include "SummarizeResult.hpp"
+#include "Utils.hpp"
 #include "StarNet2503081200TV.hpp"
 #include "StarNet2503081200TVA.hpp"
 #include "StarNet2503132330TVA.hpp"
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 
     // 选择模型为汇总结果
     if (model == "SummarizeResult") {
-        SummarizeResult::summarize(js["resSave"].get<std::string>(), js["sumSave"].get<std::string>());
+        Utils::summarize(js["resSave"].get<std::string>(), js["sumSave"].get<std::string>());
         return 0;
     }
 
