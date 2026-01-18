@@ -38,12 +38,15 @@ StarNet2510152000TVA::StarNet2510152000TVA(const StarNet2510152000TVAConfig& con
     torch::autograd::GradMode::set_enabled(true);
     std::shared_ptr<StarNet2510152000Impl> model_ptr = std::make_shared<StarNet2510152000Impl>(config.model_config);
     logger->log("Total number of model parameters: " + std::to_string(Utils::countParameters(model_ptr)));
+    logger->log("Module-wise parameter counts: ");
+    for (const auto& named_module : model_ptr->named_modules()) {
+        const std::string& name = named_module.key();
+        std::shared_ptr<torch::nn::Module> module = named_module.value();
+        logger->log("Layer: " + name + " (" + module->name() + ") - Parameters: " + std::to_string(Utils::countParameters(module)));
+    }
     model = model_ptr;
     model->to(config.device);
-    logger->log("Successfully create model: ");
-    for (const auto& named_module : model->named_modules()) {
-        logger->log("Layer: " + named_module.key() + " (" + named_module.value()->name() + ")");
-    }
+    logger->log("Successfully create model.");
 
     // 初始化优化器
     optimizer = std::make_unique<torch::optim::Adam>(model->parameters(), torch::optim::AdamOptions(config.learning_rate).betas({config.beta1, config.beta2}).weight_decay(config.weight_decay));
