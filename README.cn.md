@@ -98,25 +98,25 @@
 3. 直接关闭启动的**Visual Studio Installer**。
 4. 在**命令提示符**中输入`winget show --versions "Microsoft.VisualStudio.2022.Community"`，以查看所有可用的**Visual Studio 2022 Community** 版本。
 
-![Visual Studio Installer - Install Visual Studio 2026 - image 1](.\readmeImages\image32.png)
+![Visual Studio Installer - Install Visual Studio 2026 - image 1](readmeImages/image32.png)
 
 5. 在**命令提示符**中输入`winget install -v 17.14.24 "Microsoft.VisualStudio.2022.Community""`，**Visual Studio Installer**会自动启动并下载安装**Visual Studio 2022 Community**。
 6. 重新打开**Visual Studio Installer**，可以看到出现所需的**Visual Studio 2022 Community**。
 
-![Visual Studio Installer - Install Visual Studio 2026 - image 2](.\readmeImages\image33.png)
+![Visual Studio Installer - Install Visual Studio 2026 - image 2](readmeImages/image33.png)
 
 7. 点击**修改**，在**工作负荷**中确保勾选`使用 C++ 的桌面开发`，随后下载安装。
 
-![Visual Studio Installer - Install Visual Studio 2026 - image 3](.\readmeImages\image34.png)
+![Visual Studio Installer - Install Visual Studio 2026 - image 3](readmeImages/image34.png)
 
 8. 重启计算机。
 9. 添加到环境变量。
 
-![Visual Studio Installer - Install Visual Studio 2026 - image 4](.\readmeImages\image35.png)
+![Visual Studio Installer - Install Visual Studio 2026 - image 4](readmeImages/image35.png)
 
 10. 在**命令提示符**中输入命令 `cl` 以确认能识别到 cl 编译器。
 
-![Visual Studio Installer - Install Visual Studio 2026 - image 5](.\readmeImages\image36.png)
+![Visual Studio Installer - Install Visual Studio 2026 - image 5](readmeImages/image36.png)
 
 #### GPU Driver
 
@@ -128,23 +128,23 @@ GPU 驱动版本通常对 CUDA 的支持版本向下兼容，所以请务必使�
 
 1. 打开 NVIDIA App。
 
-![NVIDIA App - Update Driver - image 1](.\readmeImages\image8.png)
+![NVIDIA App - Update Driver - image 1](readmeImages/image8.png)
 
 2. 在**驱动程序**界面中**下载**最新的驱动程序 (本文使用 GeForce Game Ready 驱动程序)。
 
-![NVIDIA App - Update Driver - image 2](.\readmeImages\image9.png)
+![NVIDIA App - Update Driver - image 2](readmeImages/image9.png)
 
 3. 在**驱动程序**界面中**安装**下载好的驱动程序 (本文选择**快速安装**)。
 
-![NVIDIA App - Update Driver - image 3](.\readmeImages\image10.png)
+![NVIDIA App - Update Driver - image 3](readmeImages/image10.png)
 
 4. 按照建议重启计算机。
 
-![NVIDIA App - Update Driver - image 4](.\readmeImages\image11.png)
+![NVIDIA App - Update Driver - image 4](readmeImages/image11.png)
 
 5. 在**命令提示符**中输入命令 `nvidia-smi` 以确认驱动版本与最高支持的 CUDA 版本。其中 `Driver Version: 591.74` 表示当前驱动版本为 `591.74`，`CUDA Version: 13.1` 则表示最高支持的 CUDA 版本为 `13.1`。
 
-![NVIDIA App - Update Driver - image 5](.\readmeImages\image14.png)
+![NVIDIA App - Update Driver - image 5](readmeImages/image14.png)
 
 #### CUDA Toolkit
 
@@ -156,27 +156,27 @@ GPU 驱动版本通常对 CUDA 的支持版本向下兼容，所以请务必使�
 
 1. 在 [CUDA Toolkit 12.4 下载页面](https://developer.nvidia.com/cuda-12-4-0-download-archive?target_os=Windows&target_arch=x86_64&target_version=11&target_type=exe_local) 勾选符合环境的选项并下载。
 
-![CUDA - Install - image 1](.\readmeImages\image15.png)
+![CUDA - Install - image 1](readmeImages/image15.png)
 
 2. 打开下载好的 `cuda_12.4.0_551.61_windows.exe` 进行安装 (图中的路径是安装过程中产生的临时文件的路径)。
 
-![CUDA - Install - image 2](.\readmeImages\image16.png)
+![CUDA - Install - image 2](readmeImages/image16.png)
 
 3. 通过**精简**模式安装 (具体安装过程本文不便展示)。
 
-![CUDA - Install - image 3](.\readmeImages\image17.png)
+![CUDA - Install - image 3](readmeImages/image17.png)
 
 > ⚠️**注意:** [CUDA Toolkit 12.4](https://developer.nvidia.com/cuda-12-4-0-download-archive?target_os=Windows&target_arch=x86_64&target_version=11&target_type=exe_local) 的安装包中并未提供 NVIDIA Tools Extension Library (NVTX)，若缺少该工具会导致编译报错。接下来我们将安装该工具。
 
 4. 在 [CUDA Toolkit 11.8 下载页面](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Windows&target_arch=x86_64&target_version=11&target_type=exe_local) 勾选符合环境的选项并下载。
 
-![CUDA - Install - image 4](.\readmeImages\image18.png)
+![CUDA - Install - image 4](readmeImages/image18.png)
 
 5. 打开下载好的 `cuda_11.8.0_522.06_windows.exe` 进行安装 (图与步骤 2 相同)。  
 
 6. 通过**自定义**模式安装，仅需勾选 `Nsight NVTX` (具体安装过程本文不便展示)。
 
-![CUDA - Install - image 5](.\readmeImages\image19.png)
+![CUDA - Install - image 5](readmeImages/image19.png)
 
 7. 确保系统环境变量中包含:
 - `CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.4`
@@ -186,13 +186,13 @@ GPU 驱动版本通常对 CUDA 的支持版本向下兼容，所以请务必使�
   - `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.4\bin`
   - `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.4\libnvvp`
 
-![CUDA - Install - image 6](.\readmeImages\image20.png)
+![CUDA - Install - image 6](readmeImages/image20.png)
 
-![CUDA - Install - image 7](.\readmeImages\image21.png)
+![CUDA - Install - image 7](readmeImages/image21.png)
 
 8. 在**命令提示符**中输入命令 `nvcc --versoin` 以确认能识别到安装好的 CUDA。
 
-![CUDA - Install - image 8](.\readmeImages\image22.png)
+![CUDA - Install - image 8](readmeImages/image22.png)
 
 #### LibTorch
 
@@ -206,13 +206,13 @@ LibTorch 的安装非常简单，只需下载并解压即可，但 PyTorch 似�
 
 1. 打开 [页面](https://download.pytorch.org/libtorch/cu124/)，可以看到 LibTorch 对 CUDA Toolkit 12.4 的历史支持版本下载链接：其中 `libtorch-shared-with-deps-2.x.x%2Bcu124.zip` 是用于 Linux 系统下的版本；`libtorch-win-shared-with-deps-2.x.x%2Bcu124.zip` 是用于 Windows 系统下的 Release 版本；`libtorch-win-shared-with-deps-debug-2.x.x%2Bcu124.zip` 是用于 Windows 系统下的 Debug 版本。本文建议使用 Release 版本，以使编译器可以选择优化选项，使编译后程序的运行速度远高于 Debug 版本。
 
-![LibTorch - Install - image 1](.\readmeImages\image23.png)
+![LibTorch - Install - image 1](readmeImages/image23.png)
 
 2. 下载本文使用的 [LibTorch 2.5.1+cu124 Release](https://download.pytorch.org/libtorch/cu124/libtorch-win-shared-with-deps-2.5.1%2Bcu124.zip)。
 
 3. 将其解压到空间足够的硬盘，便于区分多个版本的 LibTorch，可以重命名解压得到的文件夹。
 
-![LibTorch - Install - image 2](.\readmeImages\image24.png)
+![LibTorch - Install - image 2](readmeImages/image24.png)
 
 #### CMake
 
@@ -222,17 +222,17 @@ LibTorch 的安装非常简单，只需下载并解压即可，但 PyTorch 似�
 
 1. 在 [CMake 的历史版本页面](https://cmake.org/files/v3.30/) 中下载 `cmake-3.30.1-windows-x86_64.msi`。
 
-![CMake - Install - image 1](.\readmeImages\image25.png)
+![CMake - Install - image 1](readmeImages/image25.png)
 
 2. 双击下载得到的 `cmake-3.30.1-windows-x86_64.msi` 文件进行安装即可。
 
 3. 确保系统环境变量中包含 CMake。
 
-![CMake - Install - image 2](.\readmeImages\image26.png)
+![CMake - Install - image 2](readmeImages/image26.png)
 
 4. 在**命令提示符**中输入命令 `cmake --versoin` 以确认能识别到安装好的 CMake。
 
-![CMake - Install - image 3](.\readmeImages\image31.png)
+![CMake - Install - image 3](readmeImages/image31.png)
 
 #### MATLAB
 
@@ -256,7 +256,7 @@ MATLAB 属于商业软件，本文不提供下载与安装实践参考。需要�
 - `raw_data_root_dir` 为下载的开源数据集的根目录，
 - `output_root_dir` 为输出的五折数据集路径。
 
-![Generate HD-sEMG windowed samples - image 1](.\readmeImages\image28.png)
+![Generate HD-sEMG windowed samples - image 1](readmeImages/image28.png)
 
 2. 使用 MATLAB 运行 `generate_hdsEMG_windowed_samples.m` 直到处理完所有数据即可。
 
@@ -270,32 +270,32 @@ MATLAB 属于商业软件，本文不提供下载与安装实践参考。需要�
 
 > ⚠️**注意:** 请确保能够连接到 GitHub 以下载依赖的 [nlohmann/json](https://github.com/nlohmann/json.git)。
 
-![Build - image 1](.\readmeImages\image37.png)
+![Build - image 1](readmeImages/image37.png)
 
 4. 输入 `cmake --build . --config release` 构建项目。
 
 > ⚠️**注意:** 若选择的 LibTorch 为 Debug 版本，请使用 `cmake --build . --config debug` 进行构建。
 
-![Build - image 2](.\readmeImages\image38.png)
+![Build - image 2](readmeImages/image38.png)
 
 #### 训练与验证
 
 1. 从 `.\Standby` 文件夹中选择所需的模型的所有或个别 `json` 文件，将其复制到 `.\json` 文件夹中。
 
-![Train - image 1](.\readmeImages\image39.png)
+![Train - image 1](readmeImages/image39.png)
 
 2. 修改每个 `json` 文件中的路径：
 - `rootOrig` 为**五折数据集的准备**中的 `output_root_dir`
 - `savePath` 为保存结果的路径，结果将包含最终 Epoch 的模型，准确率最优 Epoch 的模型，完整的训练验证日志。
 
-![Train - image 2](.\readmeImages\image40.png)
+![Train - image 2](readmeImages/image40.png)
 
 3. 在项目根目录 `.\` 打开**命令提示符**，输入 `.\run.bat` 开始训练与验证。
 
-![Train - image 3](.\readmeImages\image41.png)
+![Train - image 3](readmeImages/image41.png)
 
-![Train - image 4](.\readmeImages\image42.png)
+![Train - image 4](readmeImages/image42.png)
 
 4. 在 `savePath` 目录下检视训练结果。
 
-![Train - image 4](.\readmeImages\image43.png)
+![Train - image 4](readmeImages/image43.png)

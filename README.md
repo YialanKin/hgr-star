@@ -101,21 +101,21 @@ On Windows, we strongly recommend installing [Microsoft Visual Studio](https://v
     winget show --versions "Microsoft.VisualStudio.2022.Community"
     ```
     to list available versions.  
-    ![Visual Studio Installer - Install Visual Studio 2026 - image 1](.\readmeImages\image32.png)
+    ![Visual Studio Installer - Install Visual Studio 2026 - image 1](readmeImages/image32.png)
 5. Install a compatible version (e.g., 17.14.24):
     ```
     winget install -v 17.14.24 "Microsoft.VisualStudio.2022.Community"
     ```
     The installer will launch automatically.
 6. Reopen **Visual Studio Installer**; you should now see **Visual Studio 2022 Community**.  
-    ![Visual Studio Installer - Install Visual Studio 2026 - image 2](.\readmeImages\image33.png)
+    ![Visual Studio Installer - Install Visual Studio 2026 - image 2](readmeImages/image33.png)
 7. Click **Modify**, ensure **Desktop development with C++** is selected under **Workloads**, then install.  
-    ![Visual Studio Installer - Install Visual Studio 2026 - image 3](.\readmeImages\image34.png)
+    ![Visual Studio Installer - Install Visual Studio 2026 - image 3](readmeImages/image34.png)
 8. Restart your computer.
 9. Add necessary paths to environment variables.  
-    ![Visual Studio Installer - Install Visual Studio 2026 - image 4](.\readmeImages\image35.png)
+    ![Visual Studio Installer - Install Visual Studio 2026 - image 4](readmeImages/image35.png)
 10. Verify installation by running `cl` in Command Prompt.  
-    ![Visual Studio Installer - Install Visual Studio 2026 - image 5](.\readmeImages\image36.png)
+    ![Visual Studio Installer - Install Visual Studio 2026 - image 5](readmeImages/image36.png)
 
 #### GPU Driver
 
@@ -126,15 +126,15 @@ Steps used in our environment:
 > 🕰 **Local Time:** January 17, 2026, 18:13:07
 
 1. Open **NVIDIA App**.  
-    ![NVIDIA App - Update Driver - image 1](.\readmeImages\image8.png)
+    ![NVIDIA App - Update Driver - image 1](readmeImages/image8.png)
 2. In the **Drivers** tab, **Download** the latest driver (we used GeForce Game Ready).  
-    ![NVIDIA App - Update Driver - image 2](.\readmeImages\image9.png)
+    ![NVIDIA App - Update Driver - image 2](readmeImages/image9.png)
 3. **Install** the downloaded driver (we chose **Quick Installation**).  
-    ![NVIDIA App - Update Driver - image 3](.\readmeImages\image10.png)
+    ![NVIDIA App - Update Driver - image 3](readmeImages/image10.png)
 4. Restart your computer.  
-    ![NVIDIA App - Update Driver - image 4](.\readmeImages\image11.png)
+    ![NVIDIA App - Update Driver - image 4](readmeImages/image11.png)
 5. Verify with `nvidia-smi`. Example output: `Driver Version: 591.74` and `CUDA Version: 13.1` indicate compatibility with CUDA 12.4.  
-    ![NVIDIA App - Update Driver - image 5](.\readmeImages\image14.png)
+    ![NVIDIA App - Update Driver - image 5](readmeImages/image14.png)
 
 #### CUDA Toolkit
 
@@ -145,17 +145,17 @@ This project was developed with [CUDA Toolkit 12.4](https://developer.nvidia.com
 > 🕰 **Local Time:** January 17, 2026, 19:34:47
 
 1. On the [CUDA 12.4 download page](https://developer.nvidia.com/cuda-12-4-0-download-archive?target_os=Windows&target_arch=x86_64&target_version=11&target_type=exe_local), select your platform and download the installer.  
-    ![CUDA - Install - image 1](.\readmeImages\image15.png)
+    ![CUDA - Install - image 1](readmeImages/image15.png)
 2. Run **cuda_12.4.0_551.61_windows.exe**.  
-    ![CUDA - Install - image 2](.\readmeImages\image16.png)
+    ![CUDA - Install - image 2](readmeImages/image16.png)
 3. Install using **Express** mode.  
-    ![CUDA - Install - image 3](.\readmeImages\image17.png)
+    ![CUDA - Install - image 3](readmeImages/image17.png)
     > ⚠️ **Critical Note:** The CUDA 12.4 installer **does not include NVTX (NVIDIA Tools Extension Library)**, which is required by LibTorch. To resolve this, install NVTX separately from CUDA 11.8:
 4. Go to the [CUDA Toolkit 11.8 download page](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Windows&target_arch=x86_64&target_version=11&target_type=exe_local) and download the installer.  
-    ![CUDA - Install - image 4](.\readmeImages\image18.png)
+    ![CUDA - Install - image 4](readmeImages/image18.png)
 5. Run `cuda_11.8.0_522.06_windows.exe`.
 6. Choose **Custom** installation and **only select Nsight NVTX**.  
-    ![CUDA - Install - image 5](.\readmeImages\image19.png)
+    ![CUDA - Install - image 5](readmeImages/image19.png)
 7. Ensure the following environment variables are set:
    - `CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.4`
    - `CUDA_PATH_V12_4=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.4`
@@ -164,10 +164,10 @@ This project was developed with [CUDA Toolkit 12.4](https://developer.nvidia.com
      - `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.4\bin`
      - `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.4\libnvvp`
 
-    ![CUDA - Install - image 6](.\readmeImages\image20.png)  
-    ![CUDA - Install - image 7](.\readmeImages\image21.png)
+    ![CUDA - Install - image 6](readmeImages/image20.png)  
+    ![CUDA - Install - image 7](readmeImages/image21.png)
 8. Verify with `nvcc --version`.  
-    ![CUDA - Install - image 8](.\readmeImages\image22.png)
+    ![CUDA - Install - image 8](readmeImages/image22.png)
 
 #### LibTorch
 
@@ -182,10 +182,10 @@ Installation is straightforward: download and extract.
     - **libtorch-win-shared-with-deps-debug-2.x.x%2Bcu124.zip:** Windows Debug
 
     We recommend **Release** for performance.  
-    ![LibTorch - Install - image 1](.\readmeImages\image23.png)
+    ![LibTorch - Install - image 1](readmeImages/image23.png)
 2. Download [LibTorch 2.5.1+cu124 Release](https://download.pytorch.org/libtorch/cu124/libtorch-win-shared-with-deps-2.5.1%2Bcu124.zip).
 3. Extract to a disk with sufficient space. Rename the folder for clarity (e.g., **libtorch251cu124**).  
-    ![LibTorch - Install - image 2](.\readmeImages\image24.png)
+    ![LibTorch - Install - image 2](readmeImages/image24.png)
 
 #### CMake
 
@@ -194,12 +194,12 @@ Installation is straightforward: download and extract.
 > ⚠️ **Note:** Very new CMake versions (e.g., hypothetical 4.2.1) may fail compatibility checks with projects requiring CMake < 3.5. We used **CMake 3.30.1**.
 
 1. Download **cmake-3.30.1-windows-x86_64.msi** from [CMake’s archive]((https://cmake.org/files/v3.30/)).  
-    ![CMake - Install - image 1](.\readmeImages\image25.png)
+    ![CMake - Install - image 1](readmeImages/image25.png)
 2. Run the **.msi** installer.
 3. Ensure CMake is in your **PATH**.  
-    ![CMake - Install - image 2](.\readmeImages\image26.png)
+    ![CMake - Install - image 2](readmeImages/image26.png)
 4. Verify with `cmake --version`.  
-    ![CMake - Install - image 3](.\readmeImages\image31.png)
+    ![CMake - Install - image 3](readmeImages/image31.png)
 
 #### MATLAB
 
@@ -227,7 +227,7 @@ Download all **20 subject files** (total ~131 GB) from [figshare](https://spring
     - Set `raw_data_root_dir` to your downloaded dataset root.
     - Set `output_root_dir` to your desired output path.
 
-    ![Generate HD-sEMG windowed samples - image 1](.\readmeImages\image28.png)
+    ![Generate HD-sEMG windowed samples - image 1](readmeImages/image28.png)
 2. Run the script in MATLAB until all data is processed.
 
 #### Building HGR-STAR
@@ -244,30 +244,30 @@ Download all **20 subject files** (total ~131 GB) from [figshare](https://spring
     ```
     > ⚠️ Ensure internet access to download **nlohmann/json**.
 
-    ![Build - image 1](.\readmeImages\image37.png)
+    ![Build - image 1](readmeImages/image37.png)
 4. Build in Release mode:
     ```
     cmake --build . --config release
     ```
     > ⚠️ Use `--config debug` if using a Debug version of LibTorch.
 
-    ![Build - image 2](.\readmeImages\image38.png)
+    ![Build - image 2](readmeImages/image38.png)
 
 #### Training and Validation
 
 1. Copy desired JSON config(s) from `.\Standby\` to `.\json\`.  
-    ![Train - image 1](.\readmeImages\image39.png)
+    ![Train - image 1](readmeImages/image39.png)
 2. Edit each JSON file:
     - Set `rootOrig` to your `output_root_dir` from MATLAB preprocessing.
     - Set `savePath` to where results (models, logs) will be saved.
   
-    ![Train - image 2](.\readmeImages\image40.png)
+    ![Train - image 2](readmeImages/image40.png)
 3. Run the training queue from the project root:
     ```
     .\run.bat
     ```
-    ![Train - image 3](.\readmeImages\image41.png)
+    ![Train - image 3](readmeImages/image41.png)
 
-    ![Train - image 4](.\readmeImages\image42.png)
+    ![Train - image 4](readmeImages/image42.png)
 4. Inspect results in `savePath`.  
-    ![Train - image 4](.\readmeImages\image43.png)
+    ![Train - image 4](readmeImages/image43.png)
