@@ -1,0 +1,22 @@
+{
+    "model": "StarNet2605071620A",
+    "cuda": true,
+    "epochs": 20,
+    "warmup": 2,
+    "batchSize": 32,
+    "learningRate": 0.001,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "weightDecay": 0.001,
+    "rootOrig": "D:\\dataset\\7210397\\processed_windowed_w200_s100\\s12",
+    "rootEnve": "",
+    "rootMUAPP2P": "",
+    "rootComm": "",
+    "savePath": "D:\\dataset\\7210397\\model\\StarNet2605071620A\\s12",
+    "combination": 3,
+    "embed": 8,
+    "depths": [1, 1, 1, 1],
+    "inChannels": 128,
+    "compressedChannels": 128,
+    "numClasses": 8
+}

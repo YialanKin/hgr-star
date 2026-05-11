@@ -1,6 +1,6 @@
 #pragma once
-#include "StarNet2510152000.hpp"
-#include "MultiFeatureDataset.hpp"
+#include "StarNet2605071620.hpp"
+#include "CapgMyoDba.hpp"
 #include "Logger.hpp"
 #include "Utils.hpp"
 #include "Metrics.hpp"
@@ -10,7 +10,7 @@
 #define OMC 3
 #define EMC 4
 
-struct StarNet2510152000TVAConfig {
+struct StarNet2605071620TVAConfig {
     /** 模型运行设备 */
     torch::Device device = torch::kCPU;
 
@@ -56,26 +56,22 @@ struct StarNet2510152000TVAConfig {
     /** 特征组合方式 */
     int combination = -1;
 
+    /** 类别数 */
+    int num_classes = 65;
+
     /** 模型的配置结构体 */
-    StarNet2510152000Options model_config;
+    StarNet2605071620Options model_config;
 };
 
 
-class StarNet2510152000TVA {
+class StarNet2605071620TVA {
 public:
-    /// @brief StarNet2510152000TVA 的构造函数
-    /// @param config StarNet2510152000TVA 的配置结构体
-    StarNet2510152000TVA(const StarNet2510152000TVAConfig& config);
+    /// @brief StarNet2605071620TVA 的构造函数
+    /// @param config StarNet2605071620TVA 的配置结构体
+    StarNet2605071620TVA(const StarNet2605071620TVAConfig& config);
 
 private:
-    /// @brief 训练一个时期
-    /// @param epoch 时期
-    /// @return 该时期的累计损失与累计正确预测数
     Metrics trainOneEpoch(int epoch);
-
-    /// @brief 验证一个时期
-    /// @param epoch 时期
-    /// @return 该时期的累计损失与累计正确预测数
     Metrics evaluate(int epoch);
 
     /// @brief 计算两个时间点的毫秒间隔
@@ -101,15 +97,15 @@ private:
     int num_val_batches;
 
     /** 训练集加载器 */
-    std::unique_ptr<torch::data::StatelessDataLoader<torch::data::datasets::MapDataset<MultiFeatureDataset, torch::data::transforms::Stack<torch::data::Example<at::Tensor, at::Tensor> > >, torch::data::samplers::RandomSampler>, std::default_delete<torch::data::StatelessDataLoader<torch::data::datasets::MapDataset<MultiFeatureDataset, torch::data::transforms::Stack<torch::data::Example<at::Tensor, at::Tensor> > >, torch::data::samplers::RandomSampler> > >
+    std::unique_ptr<torch::data::StatelessDataLoader<torch::data::datasets::MapDataset<CapgMyoDba, torch::data::transforms::Stack<torch::data::Example<at::Tensor, at::Tensor> > >, torch::data::samplers::RandomSampler>, std::default_delete<torch::data::StatelessDataLoader<torch::data::datasets::MapDataset<CapgMyoDba, torch::data::transforms::Stack<torch::data::Example<at::Tensor, at::Tensor> > >, torch::data::samplers::RandomSampler> > >
         train_loader = nullptr;
 
     /** 验证集加载器 */
-    std::unique_ptr<torch::data::StatelessDataLoader<torch::data::datasets::MapDataset<MultiFeatureDataset, torch::data::transforms::Stack<torch::data::Example<at::Tensor, at::Tensor> > >, torch::data::samplers::RandomSampler>, std::default_delete<torch::data::StatelessDataLoader<torch::data::datasets::MapDataset<MultiFeatureDataset, torch::data::transforms::Stack<torch::data::Example<at::Tensor, at::Tensor> > >, torch::data::samplers::RandomSampler> > >
+    std::unique_ptr<torch::data::StatelessDataLoader<torch::data::datasets::MapDataset<CapgMyoDba, torch::data::transforms::Stack<torch::data::Example<at::Tensor, at::Tensor> > >, torch::data::samplers::RandomSampler>, std::default_delete<torch::data::StatelessDataLoader<torch::data::datasets::MapDataset<CapgMyoDba, torch::data::transforms::Stack<torch::data::Example<at::Tensor, at::Tensor> > >, torch::data::samplers::RandomSampler> > >
         val_loader = nullptr;
 
     /** 模型 */
-    StarNet2510152000 model = nullptr;
+    StarNet2605071620 model = nullptr;
 
     /** 优化器 */
     std::unique_ptr<torch::optim::Adam> optimizer = nullptr;
@@ -119,92 +115,100 @@ private:
 
     /** 特征组合 */
     int combination;
+
+    /** 类别数 */
+    int num_classes;
 };
 
-class StarNet2510152000TVABuilder {
+class StarNet2605071620TVABuilder {
 public:
     /// @brief 设置模型是否运行于 GPU
     /// @param value 运行于 GPU 的标志
     /// @return 当前构建器对象，支持链式调用
-    StarNet2510152000TVABuilder& setCUDA(bool value);
+    StarNet2605071620TVABuilder& setCUDA(bool value);
 
     /// @brief 设置训练时期数。
     /// @param value 训练时期数。
     /// @return 当前构建器对象，支持链式调用。
-    StarNet2510152000TVABuilder& setEpochs(int value);
+    StarNet2605071620TVABuilder& setEpochs(int value);
 
     /// @brief 设置热身时期数。
     /// @param value 热身时期数。
     /// @return 当前构建器对象，支持链式调用。
-    StarNet2510152000TVABuilder& setWarmup(int value);
+    StarNet2605071620TVABuilder& setWarmup(int value);
 
     /// @brief 设置批次大小。
     /// @param value 批次大小。
     /// @return 当前构建器对象，支持链式调用。
-    StarNet2510152000TVABuilder& setBatchSize(int value);
+    StarNet2605071620TVABuilder& setBatchSize(int value);
 
     /// @brief 设置学习率。
     /// @param value 学习率。
     /// @return 当前构建器对象，支持链式调用。
-    StarNet2510152000TVABuilder& setLearningRate(double value);
+    StarNet2605071620TVABuilder& setLearningRate(double value);
 
     /// @brief 设置 Adam 优化器的 beta1。
     /// @param value Adam 优化器的 beta1。
     /// @return 当前构建器对象，支持链式调用。
-    StarNet2510152000TVABuilder& setBeta1(double value);
+    StarNet2605071620TVABuilder& setBeta1(double value);
 
     /// @brief 设置 Adam 优化器的 beta2。
     /// @param value Adam 优化器的 beta2。
     /// @return 当前构建器对象，支持链式调用。
-    StarNet2510152000TVABuilder& setBeta2(double value);
+    StarNet2605071620TVABuilder& setBeta2(double value);
 
     /// @brief 设置 Adam 优化器的 weight decay。
     /// @param value Adam 优化器的 weight decay。
     /// @return 当前构建器对象，支持链式调用。
-    StarNet2510152000TVABuilder& setWeightDecay(double value);
+    StarNet2605071620TVABuilder& setWeightDecay(double value);
 
     /// @brief 设置原始特征目录
     /// @param value 设定值
     /// @return 当前构建器对象，支持链式调用
-    StarNet2510152000TVABuilder& setRootOrig(std::string value);
+    StarNet2605071620TVABuilder& setRootOrig(std::string value);
 
     /// @brief 设置包络特征目录
     /// @param value 设定值
     /// @return 当前构建器对象，支持链式调用
-    StarNet2510152000TVABuilder& setRootEnve(std::string value);
+    StarNet2605071620TVABuilder& setRootEnve(std::string value);
 
     /// @brief 设置 MUAP 峰峰值图特征目录
     /// @param value 设定值
     /// @return 当前构建器对象，支持链式调用
-    StarNet2510152000TVABuilder& setRootMUAPP2P(std::string value);
+    StarNet2605071620TVABuilder& setRootMUAPP2P(std::string value);
 
     /// @brief 设置常见特征目录
     /// @param value 设定值
     /// @return 当前构建器对象，支持链式调用
-    StarNet2510152000TVABuilder& setRootComm(std::string value);
+    StarNet2605071620TVABuilder& setRootComm(std::string value);
 
     /// @brief 设置保存目录。
     /// @param value 保存目录。
     /// @return 当前构建器对象，支持链式调用。
-    StarNet2510152000TVABuilder& setSavePath(std::string value);
+    StarNet2605071620TVABuilder& setSavePath(std::string value);
 
     /// @brief 设置验证折。
     /// @param value 验证折。
     /// @return 当前构建器对象，支持链式调用。
-    StarNet2510152000TVABuilder& setValFold(int value);
+    StarNet2605071620TVABuilder& setValFold(int value);
 
     /// @brief 设置特征组合
     /// @param value 设定值
     /// @return 当前构建器对象，支持链式调用
-    StarNet2510152000TVABuilder& setCombination(int value);
+    StarNet2605071620TVABuilder& setCombination(int value);
 
-    /// @brief 创建并返回 StarNet2510152000TVA 实例。
+    /// @brief 设置类别数
+    /// @param value 设定值
+    /// @return 当前构建器对象，支持链式调用
+    StarNet2605071620TVABuilder& setNumClasses(int value);
+
+    /// @brief 创建并返回 StarNet2605071620TVA 实例。
     /// @param  
-    /// @return 新创建的 StarNet2510152000TVA 对象的智能指针。
-    std::shared_ptr<StarNet2510152000TVA> build(void);
+    /// @return 新创建的 StarNet2605071620TVA 对象的智能指针。
+    std::shared_ptr<StarNet2605071620TVA> build(void);
     
     /** 训练程序的配置结构体 */
-    StarNet2510152000TVAConfig config;
+    StarNet2605071620TVAConfig config;
 
 };
 

@@ -7,6 +7,9 @@
 #include "StarNet2510152000TVA.hpp"
 #include "StarNet2510152000TV.hpp"
 #include "StarNet2510161140TVA.hpp"
+#include "StarNet2606062000TVA.hpp"
+#include "StarNet2605071620TV.hpp"
+#include "StarNet2605071620TVA.hpp"
 
 int main(int argc, char* argv[]) {
     // 检查命令行参数的数量
@@ -219,6 +222,93 @@ int main(int argc, char* argv[]) {
             .setCombination(js["combination"].get<int>());
         builder.config.model_config.setEmbed(js["embed"].get<int>())
             .setDepths(js["depths"].get<std::vector<int>>());
+        for (int fold = 1; fold <= 5; ++fold) {
+            builder.setValFold(fold).build();
+        }
+        return 0;
+    }
+
+    if (model == "StarNet2606062000A") {
+        StarNet2606062000TVABuilder builder;
+        builder.setCUDA(js["cuda"].get<bool>())
+            .setEpochs(js["epochs"].get<int>())
+            .setWarmup(js["warmup"].get<int>())
+            .setBatchSize(js["batchSize"].get<int>())
+            .setLearningRate(js["learningRate"].get<double>())
+            .setBeta1(js["beta1"].get<double>())
+            .setBeta2(js["beta2"].get<double>())
+            .setWeightDecay(js["weightDecay"].get<double>())
+            .setRootOrig(js["rootOrig"].get<std::string>())
+            .setRootEnve(js["rootEnve"].get<std::string>())
+            .setRootMUAPP2P(js["rootMUAPP2P"].get<std::string>())
+            .setRootComm(js["rootComm"].get<std::string>())
+            .setSavePath(js["savePath"].get<std::string>())
+            .setCombination(js["combination"].get<int>())
+            .setNumClasses(js["numClasses"].get<int>());
+        builder.config.model_config.setEmbed(js["embed"].get<int>())
+            .setDepths(js["depths"].get<std::vector<int>>())
+            .setInChannels(js["inChannels"].get<int>())
+            .setEmbed(js["embed"].get<int>())
+            .setCompressedChannels(js["compressedChannels"].get<int>())
+            .setNumClasses(js["numClasses"].get<int>());
+        for (int fold = 1; fold <= 5; ++fold) {
+            builder.setValFold(fold).build();
+        }
+        return 0;
+    }
+
+    if (model == "StarNet2605071620") {
+        StarNet2605071620TVBuilder builder;
+        builder.setCUDA(js["cuda"].get<bool>())
+            .setEpochs(js["epochs"].get<int>())
+            .setWarmup(js["warmup"].get<int>())
+            .setBatchSize(js["batchSize"].get<int>())
+            .setLearningRate(js["learningRate"].get<double>())
+            .setBeta1(js["beta1"].get<double>())
+            .setBeta2(js["beta2"].get<double>())
+            .setWeightDecay(js["weightDecay"].get<double>())
+            .setRootOrig(js["rootOrig"].get<std::string>())
+            .setRootEnve(js["rootEnve"].get<std::string>())
+            .setRootMUAPP2P(js["rootMUAPP2P"].get<std::string>())
+            .setRootComm(js["rootComm"].get<std::string>())
+            .setSavePath(js["savePath"].get<std::string>())
+            .setCombination(js["combination"].get<int>())
+            .setNumClasses(js["numClasses"].get<int>());
+        builder.config.model_config.setEmbed(js["embed"].get<int>())
+            .setDepths(js["depths"].get<std::vector<int>>())
+            .setInChannels(js["inChannels"].get<int>())
+            .setEmbed(js["embed"].get<int>())
+            .setCompressedChannels(js["compressedChannels"].get<int>())
+            .setNumClasses(js["numClasses"].get<int>());
+        for (int fold = 1; fold <= 5; ++fold) {
+            builder.setValFold(fold).build();
+        }
+        return 0;
+    }
+
+    if (model == "StarNet2605071620A") {
+        StarNet2605071620TVABuilder builder;
+        builder.setCUDA(js["cuda"].get<bool>())
+            .setEpochs(js["epochs"].get<int>())
+            .setWarmup(js["warmup"].get<int>())
+            .setBatchSize(js["batchSize"].get<int>())
+            .setLearningRate(js["learningRate"].get<double>())
+            .setBeta1(js["beta1"].get<double>())
+            .setBeta2(js["beta2"].get<double>())
+            .setWeightDecay(js["weightDecay"].get<double>())
+            .setRootOrig(js["rootOrig"].get<std::string>())
+            .setRootEnve(js["rootEnve"].get<std::string>())
+            .setRootMUAPP2P(js["rootMUAPP2P"].get<std::string>())
+            .setRootComm(js["rootComm"].get<std::string>())
+            .setSavePath(js["savePath"].get<std::string>())
+            .setCombination(js["combination"].get<int>())
+            .setNumClasses(js["numClasses"].get<int>());
+        builder.config.model_config.setEmbed(js["embed"].get<int>())
+            .setDepths(js["depths"].get<std::vector<int>>())
+            .setInChannels(js["inChannels"].get<int>())
+            .setEmbed(js["embed"].get<int>())
+            .setCompressedChannels(js["compressedChannels"].get<int>())
+            .setNumClasses(js["numClasses"].get<int>());
         for (int fold = 1; fold <= 5; ++fold) {
             builder.setValFold(fold).build();
         }

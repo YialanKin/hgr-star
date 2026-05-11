@@ -26,7 +26,7 @@ include(FetchContent)
 FetchContent_Declare(
     nlohmann_json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG        v3.11.2  # 使用稳定版本
+    GIT_TAG        v3.12.0  # 使用稳定版本
 )
 FetchContent_MakeAvailable(nlohmann_json)
 
@@ -69,8 +69,8 @@ if (MSVC)
                        ${TORCH_DLLS}
                        $<TARGET_FILE_DIR:HGRSTAR>)
     # 编译优化
-    target_compile_options(HGRSTAR PRIVATE /O2)
-    target_compile_options(HGRSTAR PRIVATE /Ob2 /Oi /Ot /Oy /GL)
+    # target_compile_options(HGRSTAR PRIVATE /O2)
+    # target_compile_options(HGRSTAR PRIVATE /Ob2 /Oi /Ot /Oy /GL)
     target_link_options(HGRSTAR PRIVATE /LTCG)
     # 禁用警告
     message(STATUS "Adding MSVC compile options: /w44503 /wd4267 /wd4819")

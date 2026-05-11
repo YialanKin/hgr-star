@@ -1,6 +1,6 @@
-#include "StarNet2510152000TVA.hpp"
+#include "StarNet2606062000TV.hpp"
 
-StarNet2510152000TVA::StarNet2510152000TVA(const StarNet2510152000TVAConfig& config) {
+StarNet2606062000TV::StarNet2606062000TV(const StarNet2606062000TVConfig& config) {
     device = config.device;
     combination = config.combination;
 
@@ -8,7 +8,7 @@ StarNet2510152000TVA::StarNet2510152000TVA(const StarNet2510152000TVAConfig& con
     logger = std::make_shared<Logger>(config.save_path + "\\fold" + std::to_string(config.val_fold) + "\\log.txt");
 
     // 初始化数据集
-    MultiFeatureDatasetBuilder datasetBuilder;
+    CapgMyoDbaBuilder datasetBuilder;
     for (int fold = 1; fold <= 5; ++fold) {
         if (fold == config.val_fold) continue;
         if (config.root_orig != "") datasetBuilder.addPath_Orig(config.root_orig + "\\fold" + std::to_string(fold));
@@ -16,7 +16,7 @@ StarNet2510152000TVA::StarNet2510152000TVA(const StarNet2510152000TVAConfig& con
         if (config.root_muapp2p != "") datasetBuilder.addPath_MUAPP2P(config.root_muapp2p + "\\fold" + std::to_string(fold));
         if (config.root_comm != "") datasetBuilder.addPath_Comm(config.root_comm + "\\fold" + std::to_string(fold));
     }
-    std::shared_ptr<MultiFeatureDataset> train_dataset = datasetBuilder.build();
+    std::shared_ptr<CapgMyoDba> train_dataset = datasetBuilder.build();
     num_train_batches = (train_dataset->size().value() + config.batch_size - 1) / config.batch_size;
     logger->log("Successfully create train dataset.");
     datasetBuilder.clearPaths();
@@ -24,7 +24,7 @@ StarNet2510152000TVA::StarNet2510152000TVA(const StarNet2510152000TVAConfig& con
     if (config.root_enve != "") datasetBuilder.addPath_Enve(config.root_enve + "\\fold" + std::to_string(config.val_fold));
     if (config.root_muapp2p != "") datasetBuilder.addPath_MUAPP2P(config.root_muapp2p + "\\fold" + std::to_string(config.val_fold));
     if (config.root_comm != "") datasetBuilder.addPath_Comm(config.root_comm + "\\fold" + std::to_string(config.val_fold));
-    std::shared_ptr<MultiFeatureDataset> val_dataset = datasetBuilder.build();
+    std::shared_ptr<CapgMyoDba> val_dataset = datasetBuilder.build();
     num_val_batches = (val_dataset->size().value() + config.batch_size - 1) / config.batch_size;
     logger->log("Successfully create val dataset.");
 
@@ -36,25 +36,21 @@ StarNet2510152000TVA::StarNet2510152000TVA(const StarNet2510152000TVAConfig& con
 
     // 初始化模型
     torch::autograd::GradMode::set_enabled(true);
-    std::shared_ptr<StarNet2510152000Impl> model_ptr = std::make_shared<StarNet2510152000Impl>(config.model_config);
+    std::shared_ptr<StarNet2606062000Impl> model_ptr = std::make_shared<StarNet2606062000Impl>(config.model_config);
     logger->log("Total number of model parameters: " + std::to_string(Utils::countParameters(model_ptr)));
-    logger->log("Module-wise parameter counts: ");
-    for (const auto& named_module : model_ptr->named_modules()) {
-        const std::string& name = named_module.key();
-        std::shared_ptr<torch::nn::Module> module = named_module.value();
-        logger->log("Layer: " + name + " (" + module->name() + ") - Parameters: " + std::to_string(Utils::countParameters(module)));
-    }
     model = model_ptr;
     model->to(config.device);
-    logger->log("Successfully create model.");
+    logger->log("Successfully create model: ");
+    for (const auto& named_module : model->named_modules()) {
+        logger->log("Layer: " + named_module.key() + " (" + named_module.value()->name() + ")");
+    }
 
     // 初始化优化器
     optimizer = std::make_unique<torch::optim::Adam>(model->parameters(), torch::optim::AdamOptions(config.learning_rate).betas({config.beta1, config.beta2}).weight_decay(config.weight_decay));
     logger->log("Successfully create optimizer.");
     
     // 训练循环
-    // double bestValAcc = 0.0;
-    Metrics best_result = { 0, 0, 0, 0 };
+    double bestValAcc = 0.0;
     for (int epoch = 0; epoch <= config.epochs; ++epoch) {
         // 学习率调整，热身与余弦退火
         if (epoch <= config.warmup) {
@@ -73,39 +69,24 @@ StarNet2510152000TVA::StarNet2510152000TVA(const StarNet2510152000TVAConfig& con
         }
 
         // 训练与验证
-        // std::pair<double, double> train_result = trainOneEpoch(epoch);
-        // std::pair<double, double> val_result = evaluate(epoch);
-        Metrics train_result = trainOneEpoch(epoch);
-        Metrics val_result = evaluate(epoch);
+        std::pair<double, double> train_result = trainOneEpoch(epoch);
+        std::pair<double, double> val_result = evaluate(epoch);
 
         // 保存最优模型
-        // if (val_result.second > bestValAcc) {
-        //     bestValAcc = val_result.second;
-        //     torch::save(model, config.save_path + "\\fold" + std::to_string(config.val_fold) + "\\bestModel.pt");
-        // }
-        if (val_result.acc > best_result.acc) {
-            best_result = val_result;
+        if (val_result.second > bestValAcc) {
+            bestValAcc = val_result.second;
             torch::save(model, config.save_path + "\\fold" + std::to_string(config.val_fold) + "\\bestModel.pt");
         }
-
-
     }
 
     // 保存最后模型
-    // torch::save(model, config.save_path + "\\fold" + std::to_string(config.val_fold) + "\\lastModel.pt");
-    // logger->log("Best Val Acc: " + std::to_string(bestValAcc));
-
     torch::save(model, config.save_path + "\\fold" + std::to_string(config.val_fold) + "\\lastModel.pt");
     
-    logger->log("Best Val Acc: " + std::to_string(best_result.acc));
-    logger->log("Best Val Macro Precision: " + std::to_string(best_result.macro_p));
-    logger->log("Best Val Macro Recall: " + std::to_string(best_result.macro_r));
-    logger->log("Best Val Macro F1: " + std::to_string(best_result.macro_f1));
-    
+    logger->log("Best Val Acc: " + std::to_string(bestValAcc));
     return;
 }
 
-Metrics StarNet2510152000TVA::trainOneEpoch(int epoch) {
+std::pair<double, double> StarNet2606062000TV::trainOneEpoch(int epoch) {
     // 计时
     auto epoch_start_time = std::chrono::system_clock::now();               // 该轮次的开始时间
     int64_t batch_duration_sum = 0;                                         // 所有循环的总耗时
@@ -121,9 +102,6 @@ Metrics StarNet2510152000TVA::trainOneEpoch(int epoch) {
     int step = 0;                                                           // 训练步进次数
     float epsilon = 0.1;
     int num_classes = 65;
-    torch::Tensor y_pred = torch::tensor({}, torch::kLong);
-    torch::Tensor y_true = torch::tensor({}, torch::kLong);
-
 
     // 训练
     for (const auto& batch : *train_loader) {
@@ -147,18 +125,16 @@ Metrics StarNet2510152000TVA::trainOneEpoch(int epoch) {
         // }
         data = x1;
         torch::Tensor classes = batch.target;                               // 取训练标签
-        y_true = torch::cat({y_true, classes});
-        torch::Tensor onehot = torch::zeros({classes.size(0), num_classes});
-        onehot.scatter_(1, classes.unsqueeze(1).to(torch::kLong), 1);
-        torch::Tensor smoothed_part = torch::ones_like(onehot) * (epsilon / (num_classes - 1));
-        torch::Tensor one_minus_epsilon = torch::ones_like(onehot) * (1 - epsilon);
-        torch::Tensor smoothed_labels = torch::where(onehot == 1, one_minus_epsilon, smoothed_part);
+        // torch::Tensor onehot = torch::zeros({classes.size(0), num_classes});
+        // onehot.scatter_(1, classes.unsqueeze(1).to(torch::kLong), 1);
+        // torch::Tensor smoothed_part = torch::ones_like(onehot) * (epsilon / (num_classes - 1));
+        // torch::Tensor one_minus_epsilon = torch::ones_like(onehot) * (1 - epsilon);
+        // torch::Tensor smoothed_labels = torch::where(onehot == 1, one_minus_epsilon, smoothed_part);
         num_samples += data.size(0);                                        // 累计样本数量
         torch::Tensor pred = model->forward(data.to(torch::kF32).to(device));
         torch::Tensor pred_classes = pred.argmax(1);                        // 预测标签
-        y_pred = torch::cat({y_pred, pred_classes.to(torch::kCPU)});
         accumulated_goal += pred_classes.eq(classes.to(device)).sum();      // 累计正确预测的样本数
-        torch::Tensor loss = loss_function(pred, smoothed_labels.to(device));       // 计算损失
+        torch::Tensor loss = loss_function(pred, classes.to(device));       // 计算损失
         loss.backward();                                                    // 反向传播
         accumulated_loss += loss.item<float>();                             // 累计损失
         optimizer->step();                                                  // 优化器步进
@@ -182,11 +158,10 @@ Metrics StarNet2510152000TVA::trainOneEpoch(int epoch) {
         log_stream << "Acc: " << std::fixed << std::setprecision(6) << accumulated_goal.item<float>() / num_samples << " ";
         logger->log(log_stream.str());
     }
-    // return std::make_pair(accumulated_loss.item<float>() / step, accumulated_goal.item<float>() / num_samples);
-    return calculateMetrics(y_true, y_pred, num_classes);
+    return std::make_pair(accumulated_loss.item<float>() / step, accumulated_goal.item<float>() / num_samples);
 }
 
-Metrics StarNet2510152000TVA::evaluate(int epoch) {
+std::pair<double, double> StarNet2606062000TV::evaluate(int epoch) {
     // 计时
     auto epoch_start_time = std::chrono::system_clock::now();               // 该轮次的开始时间
     int64_t batch_duration_sum = 0;                                         // 所有循环的总耗时
@@ -199,9 +174,6 @@ Metrics StarNet2510152000TVA::evaluate(int epoch) {
     torch::Tensor accumulated_goal = torch::zeros(1).to(device);            // 累计正确预测的样本数
     int64_t num_samples = 0;                                                // 样本数量
     int64_t step = 0;                                                       // 验证步进次数
-    int num_classes = 65;
-    torch::Tensor y_pred = torch::tensor({}, torch::kLong);
-    torch::Tensor y_true = torch::tensor({}, torch::kLong);
 
     // 验证
     for (const auto& batch : *val_loader) {
@@ -225,11 +197,9 @@ Metrics StarNet2510152000TVA::evaluate(int epoch) {
         // }
         data = x1;
         torch::Tensor classes = batch.target;                               // 取验证标签
-        y_true = torch::cat({y_true, classes});
         num_samples += data.size(0);                                        // 累计样本数量
         torch::Tensor pred = model->forward(data.to(torch::kF32).to(device));
         torch::Tensor pred_classes = pred.argmax(1);                        // 预测标签
-        y_pred = torch::cat({y_pred, pred_classes.to(torch::kCPU)});
         accumulated_goal += pred_classes.eq(classes.to(device)).sum();      // 累计正确预测的样本数
         torch::Tensor loss = loss_function(pred, classes.to(device));       // 计算损失
         accumulated_loss += loss.item<float>();                             // 累计损失
@@ -256,17 +226,16 @@ Metrics StarNet2510152000TVA::evaluate(int epoch) {
     // 计时
     auto epochEndTime = std::chrono::system_clock::now();        // 该轮次的结束时间
 
-    // return std::make_pair(accumulated_loss.item<float>() / step, accumulated_goal.item<float>() / num_samples);
-    return calculateMetrics(y_true, y_pred, num_classes);
+    return std::make_pair(accumulated_loss.item<float>() / step, accumulated_goal.item<float>() / num_samples);
 }
 
-int64_t StarNet2510152000TVA::computeDuration_ms(const std::chrono::system_clock::time_point& start, const std::chrono::system_clock::time_point& end) {
+int64_t StarNet2606062000TV::computeDuration_ms(const std::chrono::system_clock::time_point& start, const std::chrono::system_clock::time_point& end) {
     auto duration = end - start;
     auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
     return milliseconds;
 }
 
-std::vector<int64_t> StarNet2510152000TVA::computeDuration_hms(const std::chrono::system_clock::time_point& start, const std::chrono::system_clock::time_point& end) {
+std::vector<int64_t> StarNet2606062000TV::computeDuration_hms(const std::chrono::system_clock::time_point& start, const std::chrono::system_clock::time_point& end) {
     auto duration = end - start;
     auto total_seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
     int64_t hours = total_seconds / 3600;
@@ -277,85 +246,85 @@ std::vector<int64_t> StarNet2510152000TVA::computeDuration_hms(const std::chrono
 
 
 
-StarNet2510152000TVABuilder& StarNet2510152000TVABuilder::setCUDA(bool value) {
+StarNet2606062000TVBuilder& StarNet2606062000TVBuilder::setCUDA(bool value) {
     if (!value) return *this;
     if (!torch::cuda::is_available()) return *this;
     config.device = torch::Device(torch::kCUDA);
     return *this;
 }
 
-StarNet2510152000TVABuilder& StarNet2510152000TVABuilder::setEpochs(int value) {
+StarNet2606062000TVBuilder& StarNet2606062000TVBuilder::setEpochs(int value) {
     config.epochs = value;
     return *this;
 }
 
-StarNet2510152000TVABuilder& StarNet2510152000TVABuilder::setWarmup(int value) {
+StarNet2606062000TVBuilder& StarNet2606062000TVBuilder::setWarmup(int value) {
     config.warmup = value;
     return *this;
 }
 
-StarNet2510152000TVABuilder& StarNet2510152000TVABuilder::setBatchSize(int value) {
+StarNet2606062000TVBuilder& StarNet2606062000TVBuilder::setBatchSize(int value) {
     config.batch_size = value;
     return *this;
 }
 
-StarNet2510152000TVABuilder& StarNet2510152000TVABuilder::setLearningRate(double value) {
+StarNet2606062000TVBuilder& StarNet2606062000TVBuilder::setLearningRate(double value) {
     config.learning_rate = value;
     return *this;
 }
 
-StarNet2510152000TVABuilder& StarNet2510152000TVABuilder::setBeta1(double value) {
+StarNet2606062000TVBuilder& StarNet2606062000TVBuilder::setBeta1(double value) {
     config.beta1 = value;
     return *this;
 }
 
-StarNet2510152000TVABuilder& StarNet2510152000TVABuilder::setBeta2(double value) {
+StarNet2606062000TVBuilder& StarNet2606062000TVBuilder::setBeta2(double value) {
     config.beta2 = value;
     return *this;
 }
 
-StarNet2510152000TVABuilder& StarNet2510152000TVABuilder::setWeightDecay(double value) {
+StarNet2606062000TVBuilder& StarNet2606062000TVBuilder::setWeightDecay(double value) {
     config.weight_decay = value;
     return *this;
 }
 
-StarNet2510152000TVABuilder& StarNet2510152000TVABuilder::setRootOrig(std::string value) {
+StarNet2606062000TVBuilder& StarNet2606062000TVBuilder::setRootOrig(std::string value) {
     config.root_orig = value;
     return *this;
 }
 
-StarNet2510152000TVABuilder& StarNet2510152000TVABuilder::setRootEnve(std::string value) {
+StarNet2606062000TVBuilder& StarNet2606062000TVBuilder::setRootEnve(std::string value) {
     config.root_enve = value;
     return *this;
 }
 
-StarNet2510152000TVABuilder& StarNet2510152000TVABuilder::setRootMUAPP2P(std::string value) {
+StarNet2606062000TVBuilder& StarNet2606062000TVBuilder::setRootMUAPP2P(std::string value) {
     config.root_muapp2p = value;
     return *this;
 }
 
-StarNet2510152000TVABuilder& StarNet2510152000TVABuilder::setRootComm(std::string value) {
+StarNet2606062000TVBuilder& StarNet2606062000TVBuilder::setRootComm(std::string value) {
     config.root_comm = value;
     return *this;
 }
 
-StarNet2510152000TVABuilder& StarNet2510152000TVABuilder::setSavePath(std::string value) {
+StarNet2606062000TVBuilder& StarNet2606062000TVBuilder::setSavePath(std::string value) {
     config.save_path = value;
     return *this;
 }
 
-StarNet2510152000TVABuilder& StarNet2510152000TVABuilder::setValFold(int value) {
+StarNet2606062000TVBuilder& StarNet2606062000TVBuilder::setValFold(int value) {
     config.val_fold = value;
     return *this;
 }
 
-StarNet2510152000TVABuilder& StarNet2510152000TVABuilder::setCombination(int value) {
+StarNet2606062000TVBuilder& StarNet2606062000TVBuilder::setCombination(int value) {
     config.combination = value;
     return *this;
 }
 
-std::shared_ptr<StarNet2510152000TVA> StarNet2510152000TVABuilder::build(void) {
-    return std::make_shared<StarNet2510152000TVA>(config);
+std::shared_ptr<StarNet2606062000TV> StarNet2606062000TVBuilder::build(void) {
+    return std::make_shared<StarNet2606062000TV>(config);
 }
 
 
